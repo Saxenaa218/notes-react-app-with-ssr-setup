@@ -1,5 +1,6 @@
 import React from 'react'
 import {Form, Input, Button} from 'antd'
+import PropTypes from 'prop-types'
 
 const DetailModal = (props) => {
     const { mode, activeNote, addNote, updateNote} = props
@@ -108,6 +109,13 @@ const DetailModal = (props) => {
             </div> */}
         </>
     )
+}
+
+DetailModal.prototype = {
+    mode: PropTypes.string, 
+    activeNote: PropTypes.object, 
+    addNote: PropTypes.func, 
+    updateNote: PropTypes.func
 }
 
 export default DetailModal

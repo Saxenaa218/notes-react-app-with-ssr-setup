@@ -1,11 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Suspense, lazy} from 'react';
 import {Input, Card, Skeleton, Modal, Button} from 'antd';
 import {PlusCircleOutlined, DeleteFilled, EditFilled} from '@ant-design/icons';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { getAllNotes, addNote, deleteNote, updateNote, setModalVisible } from './redux/actions.js'
 import './App.scss';
-import DetailModal from './components/modal.js';
+
+const DetailModal = lazy(() => import('./components/modal.js'))
 
 const { Meta } = Card;
 
@@ -15,8 +17,6 @@ const App = (props) => {
     // const [visible, setModalVisible] = useState(false);
     const [activeNote, setActiveNote] = useState(null);
     const [mode, setMode] = useState(null)
-    // const titleRef = useRef()
-    // const descRef = useRef()
 
     useEffect(() => {
         getAllNotes()
@@ -47,29 +47,30 @@ const App = (props) => {
                 <PlusCircleOutlined /> Add new note
             </Button>
             <div className="main-container">
-                {notesLoading ? <Skeleton active/> : notes.map(e => <Card
-                    // hoverable
-                    style={{ width: 240 }}
-                    actions={[
-                        <EditFilled key="edit" onClick={() => handleCardClick(e)}/>,
-                        <DeleteFilled key="delete" onClick={() => deleteNote(e._id)}/>
-                    ]}
-                    // cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
-                  >
-                    <Meta title={e.title} description={e.desc} />
-                  </Card>)
+                {notesLoading ? 
+                    <Skeleton active/> 
+                    : 
+                    notes.map(e => 
+                        <Card
+                            style={{ width: 240 }}
+                            actions={[
+                                <EditFilled key="edit" onClick={() => handleCardClick(e)}/>,
+                                <DeleteFilled key="delete" onClick={() => deleteNote(e._id)}/>
+                            ]}
+                        >
+                            <Meta title={e.title} description={e.desc} />
+                        </Card>
+                    )
                 }
             </div>
-            {/* {activeNote && mode &&  */}
             <Modal
                 title={null}
-                // closable={false}
                 visible={visible}
                 destroyOnClose={true}
                 footer={null}
                 onCancel={() => setModalVisible(false)}
             >
-                {/* <div className="edit-modal"> */}
+                <Suspense fallback={<Skeleton active/>}>
                     <DetailModal 
                         mode={mode}
                         activeNote={activeNote}
@@ -77,9 +78,8 @@ const App = (props) => {
                         addNote={addNote}
                         setModalVisible={setModalVisible}
                     />
-                {/* </div> */}
+                </Suspense>
             </Modal>
-            {/* } */}
         </div>
     );
 }
@@ -100,6 +100,17 @@ const mapDispatchToProps = dispatch => {
         updateNote,
         setModalVisible
     }, dispatch)
+}
+
+App.prototype = {
+    notes: PropTypes.array,
+    notesLoading: PropTypes.bool, 
+    visible: PropTypes.bool, 
+    setModalVisible: PropTypes.func,
+    getAllNotes: PropTypes.func, 
+    addNote: PropTypes.func, 
+    deleteNote: PropTypes.func, 
+    updateNote: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
