@@ -13,7 +13,16 @@ const { Meta } = Card;
 
 const App = (props) => {
     
-    const { notes, notesLoading, getAllNotes, addNote, deleteNote, updateNote, visible, setModalVisible } = props
+    const { 
+        notes, 
+        notesLoading, 
+        getAllNotes, 
+        addNote, 
+        deleteNote, 
+        updateNote, 
+        visible, 
+        setModalVisible 
+    } = props
     // const [visible, setModalVisible] = useState(false);
     const [activeNote, setActiveNote] = useState(null);
     const [mode, setMode] = useState(null)
@@ -102,7 +111,7 @@ const mapDispatchToProps = dispatch => {
     }, dispatch)
 }
 
-App.prototype = {
+App.propTypes = {
     notes: PropTypes.array,
     notesLoading: PropTypes.bool, 
     visible: PropTypes.bool, 

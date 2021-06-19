@@ -4,7 +4,7 @@ import rootReducer from './reducer.js'
 
 const initialState = {
     notes: [],
-    loading: false,
+    loading: true,
     modalVisible: false
 }
 

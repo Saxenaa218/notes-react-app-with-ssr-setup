@@ -5,7 +5,7 @@ const rootReducer = (state = initialState, action) => {
         case 'ADD_NOTE':
             return { ...state, notes: [ ...state.notes, action.payload ] }
         case 'SET_NOTES':
-            return { ...state, notes: action.payload }
+            return { ...state, notes: action.payload, loading: false }
         case 'VISIBLE':
             return { ...state, modalVisible: action.payload }
         default:
